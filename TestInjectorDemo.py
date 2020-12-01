@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from BusyBox.ServiceBox import Box
-
+from logging import info
 box = Box()
 
 
@@ -19,8 +19,26 @@ class Bus1Service(object):
 @box.depend()
 class CowService(object):
 
+    @staticmethod
+    def name():
+        _name = __class__.__name__
+        print('_name:', _name)
+        return _name
+
+
+@box.depend()
+class EasyService(object):
+
+    def __init__(self, params1, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+        self.params1 = params1
+
     def name(self):
-        return __class__.__name__
+        print('self.args:', self.args)
+        print('self.kwargs', self.kwargs)
+        print('self.params1', self.params1)
+        return self.params1, self.args, self.kwargs
 
 
 class TestService(object):
@@ -39,27 +57,3 @@ class RestService(object):
 
     def handle(self):
         return self.params1
-
-
-# if __name__ == "__main__":
-#     inject.cow_service.name()
-#     suite = unittest.TestSuite()
-#     suite.addTest(MyclassTest('test_simple_inj'))
-#     # suite.addTest(MyclassTest('test_sub'))
-#
-#     runner = unittest.TextTestRunner()
-#     runner.run(suite)
-    # ij = InjectorBox.Injector()
-    # ij.inject(TestService, RestService, payload=dict(params1=1))
-    # t_obj = ij.test_service
-    # print(id(t_obj))
-    # t_obj.handle()
-    # t_obj.handle()
-    # print(id(t_obj))
-    # r_obj = ij.rest_service
-    # print(id(r_obj))
-    # r_obj.handle()
-    # r_obj.handle()
-    # print(id(r_obj))
-    # inj = InjectorBox.Injector()
-    # i = inj.Inject(TestService, RestService, payload=dict(params1=1))

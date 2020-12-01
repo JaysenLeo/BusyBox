@@ -3,7 +3,7 @@ import unittest
 from BusyBox.ServiceBox import Box
 from TestInjectorDemo import (
     AppleService, TestService, RestService, Bus1Service,
-    CowService, box
+    box
 )
 
 
@@ -40,33 +40,22 @@ class InjectorTest(unittest.TestCase):
         self.box.inject(Bus1Service)
         self.assertEqual(self.box.bus1_service.name(), 'Bus1Service')
 
+    def test_init_with_params_inj(self):
+        easy_service = self.box2.invoke('easy_service', 1, 2, 3, a=4, b=5)
+        self.assertEqual(easy_service.name(), (1, (2, 3), {'a': 4, 'b': 5}))
+
+
     def test_inj_by_decor(self):
         print(self.box2)
         self.assertEqual(self.box2.cow_service.name(), 'CowService')
 
 
 if __name__ == "__main__":
-    # inject.cow_service.name()
     suite = unittest.TestSuite()
     suite.addTest(InjectorTest('test_simple_inj'))
     suite.addTest(InjectorTest('test_multi_inj'))
     suite.addTest(InjectorTest('test_multi_simple_params_inj'))
     suite.addTest(InjectorTest('test_num_in_name_inj'))
+    suite.addTest(InjectorTest('test_inj_by_decor'))
     runner = unittest.TextTestRunner()
     runner.run(suite)
-
-
-    # ij = InjectorBox.Injector()
-    # ij.inject(TestService, RestService, payload=dict(params1=1))
-    # t_obj = ij.test_service
-    # print(id(t_obj))
-    # t_obj.handle()
-    # t_obj.handle()
-    # print(id(t_obj))
-    # r_obj = ij.rest_service
-    # print(id(r_obj))
-    # r_obj.handle()
-    # r_obj.handle()
-    # print(id(r_obj))
-    # inj = InjectorBox.Injector()
-    # i = inj.Inject(TestService, RestService, payload=dict(params1=1))
