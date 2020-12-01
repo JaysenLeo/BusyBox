@@ -11,13 +11,13 @@ def readme():
 
 setup(
     name='BusyBox',
-    version="0.6.0",
+    version="0.7.0",
     description=(
         'Service Inject For MVC'
     ),
     long_description=readme(),
     long_description_content_type="text/markdown",
-    keywords=['inject', 'depend', 'BusyBox'],
+    keywords=['inject', 'depend', 'invoke', 'BusyBox'],
     author='Jansen Leo',
     author_email='2835347017@qq.com',
     maintainer='Jansen Leo',

@@ -44,7 +44,6 @@ class InjectorTest(unittest.TestCase):
         easy_service = self.box2.invoke('easy_service', 1, 2, 3, a=4, b=5)
         self.assertEqual(easy_service.name(), (1, (2, 3), {'a': 4, 'b': 5}))
 
-
     def test_inj_by_decor(self):
         print(self.box2)
         self.assertEqual(self.box2.cow_service.name(), 'CowService')
