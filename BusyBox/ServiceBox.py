@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+""" class实例化 延迟 """
 import re
-from functools import wraps
 
 
-class Injector(object):
+class Box(object):
 
     def __init__(self):
         self.__payload = None
@@ -24,20 +24,12 @@ class Injector(object):
             __c_name = re.sub(pattern, lambda x: "_" + x.group(0).lower(), _c.__name__).strip('_')
             self.__objs_class_mappings.update({__c_name: dict(_obj=None, _cls=_c, _payload=_payload)})
 
-    # def depend(self):
-    #     print(self)
-    #     def decorator(func):
-    #         @wraps(func)
-    #         def wrapper(*args, **kwargs):
-    #             print('call %s():' % func)
-    #             print('args = {}'.format(*args))
-    #             print('kwargs = {}'.format(**kwargs))
-    #             self.inject(func)
-    #             return func(*args, **kwargs)
-    #
-    #         return wrapper
-    #
-    #     return decorator
+    def depend(self, *depend_args, **depend_kwargs):
+
+        def decorator(_func):
+            self.inject(_func)
+
+        return decorator
 
     def __get_probable_instance_or_class(self, _c_name):
         if self.__objs_class_mappings[_c_name]['_obj'] is None:

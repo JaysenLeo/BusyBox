@@ -1,2 +1,2 @@
 - E:\Python\Python38\python.exe setup.py sdist build
-- twine upload dist/NoIf-0.5.0.tar.gz
+- twine upload dist/BusyBox-0.2.0.tar.gz

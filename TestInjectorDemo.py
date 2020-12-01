@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from ServiceBox import InjectorBox
+from BusyBox.ServiceBox import Box
 
-inject = InjectorBox.Injector()
+box = Box()
 
 
 class AppleService(object):
@@ -16,10 +16,10 @@ class Bus1Service(object):
         return __class__.__name__
 
 
-@inject.depend()
+@box.depend()
 class CowService(object):
-    def name(self):
 
+    def name(self):
         return __class__.__name__
 
 
