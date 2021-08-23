@@ -11,9 +11,13 @@ def readme():
 
 setup(
     name='BusyBox',
-    version="0.7.0",
+    version="0.8.0",
     description=(
-        'Service Inject For MVC'
+        """Service Inject For MVC
+        
+            params inject
+            object reset
+        """
     ),
     long_description=readme(),
     long_description_content_type="text/markdown",
