@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import unittest
 from BusyBox.ServiceBox import Box
-from TestInjectorDemo import (
+from examples.TestInjectorDemo_1 import (
     AppleService, TestService, RestService, Bus1Service,
     PositionService, Position1Service, Position2Service,
-    Position3Service, Position4Service, box
+    Position3Service, Position4Service, box, FatherService, AppleServiceFactory
 )
 
 
@@ -28,6 +28,10 @@ class InjectorTest(unittest.TestCase):
     def test_simple_inj(self):
         self.box.inject(AppleService)
         self.assertEqual(self.box.apple_service.name(), 'AppleService')
+
+    def test_factory_inj(self):
+        self.box.inject_factory(AppleServiceFactory)
+        self.assertEqual(self.box.apple_service.name(), 'AppleService', '工厂注册')
 
     def test_multi_inj(self):
         self.box.inject(TestService, RestService, payload=dict(params1=1))
@@ -85,6 +89,13 @@ class InjectorTest(unittest.TestCase):
         self.assertEqual(self.box.position4_service.show_args(), (1, 2, 3, 4))
         self.assertEqual(self.box.position4_service.show_kwargs(), dict(params2=88))
         print('重置后：', id(self.box.position4_service))
+
+    def test_service_api_inject(self):
+        """ 服务中根据依赖服务的接口注入 """
+        f_srv = FatherService()
+        self.assertEqual(f_srv.child1_service.func1(), 'func1', '服务中根据依赖服务的接口注入')
+        self.assertEqual(f_srv.child2_service.func2(), 'func2', '服务中根据依赖服务的接口注入')
+        f_srv.test()
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

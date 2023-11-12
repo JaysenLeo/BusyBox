@@ -1,7 +1,17 @@
 # -*- coding: utf-8 -*-
-from BusyBox.ServiceBox import Box
+import abc
+from typing import Any
+
+from BusyBox.ServiceBox import Box, FactoryInjectAPI, factory_inject, HostFactory
 from logging import info
 box = Box()
+
+
+class Context(object):
+    session: Any
+
+    def __init__(self, session: Any):
+        self.session = session
 
 
 class AppleService(object):
@@ -129,3 +139,75 @@ class Position4Service(object):
     def show_kwargs(self):
         print('self._kwargs:', self.kwargs)
         return self.kwargs
+
+
+class Child1API(metaclass=abc.ABCMeta):
+    def func1(self) -> str:
+        raise NotImplementedError
+
+
+class Child2API(metaclass=abc.ABCMeta):
+    def func2(self) -> str:
+        raise NotImplementedError
+
+
+class Child1Service(Child1API):
+
+    def func1(self) -> str:
+        return f"func1"
+
+
+class Child2Service(Child2API):
+
+    def func2(self) -> str:
+        return "func2"
+
+
+class Child1ServiceFactory(FactoryInjectAPI):
+
+    def construct(self, context: Context) -> Child1API:
+        print(f'refer in Fac: Context {id(context)}')
+        return Child1Service()
+
+
+class Child2ServiceFactory(FactoryInjectAPI):
+
+    def construct(self) -> Child2API:
+        return Child2Service()
+
+
+@factory_inject(
+    Child1ServiceFactory,
+    Child2ServiceFactory,
+    refer=Context
+)
+class FatherService(HostFactory):
+
+    child1_service: Child1API
+    child2_service: Child2API
+    context: Context
+
+    def __init__(self, *father_args, **father_kwargs):
+        super().__init__()
+        print(f'实例化 FatherService father_args: {father_args} father_kwargs: {father_kwargs}')
+        self.context = Context('session_1')
+        print(f'refer in Host -> Context {id(self.context)}')
+
+    def test(self):
+        print('test:', self.child1_service.func1(), self.child2_service.func2())
+
+
+@factory_inject(
+    Child1ServiceFactory,
+    Child2ServiceFactory,
+)
+class FatherDeepService(object):
+
+    child1_service: Child1API
+    child2_service: Child2API
+
+    def __init__(self, *father_args, **father_kwargs):
+        pass
+
+    def test(self):
+        print('test:', self.child1_service.func1(), self.child2_service.func2())
